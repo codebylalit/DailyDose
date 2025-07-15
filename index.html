@@ -15,13 +15,13 @@
   <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col transition-colors duration-300" id="bodyRoot">
     <!-- Minimal Navbar -->
     <nav class="sticky top-0 z-50 bg-gray-50 border-b border-gray-200 transition-colors duration-300">
-      <div class="container mx-auto flex flex-row items-center justify-between py-3 px-4">
-        <span class="text-2xl font-bold tracking-tight">DailyDose</span>
-        <div class="flex items-center gap-4">
-          <a href="#" class="hover:text-blue-500 transition-colors text-base">Home</a>
-          <a href="#categories" class="hover:text-blue-500 transition-colors text-base">Categories</a>
-          <a href="#about" class="hover:text-blue-500 transition-colors text-base">About</a>
-          <button id="darkModeToggle" class="ml-2 px-2 py-1 rounded bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition text-base">🌙</button>
+      <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between py-3 px-2 sm:px-4 gap-2 sm:gap-0">
+        <span class="text-2xl font-bold tracking-tight mb-2 sm:mb-0">DailyDose</span>
+        <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto">
+          <a href="#" class="hover:text-blue-500 transition-colors text-base w-full sm:w-auto text-center">Home</a>
+          <a href="#categories" class="hover:text-blue-500 transition-colors text-base w-full sm:w-auto text-center">Categories</a>
+          <a href="#about" class="hover:text-blue-500 transition-colors text-base w-full sm:w-auto text-center">About</a>
+          <button id="darkModeToggle" class="mt-1 sm:mt-0 px-2 py-1 rounded bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition text-base w-full sm:w-auto">🌙</button>
         </div>
       </div>
     </nav>
@@ -47,16 +47,16 @@
           <ellipse cx="400" cy="350" rx="80" ry="30" fill="#b5ead7" fill-opacity="0.3"/>
         </svg>
       </div>
-      <div class="container mx-auto relative z-10 flex flex-col items-center justify-center text-center py-16 px-4 space-y-6">
-        <div class="text-lg font-semibold text-blue-600 mb-1">Welcome to DailyDose!</div>
-        <h1 class="text-4xl font-extrabold text-gray-800 leading-tight">Get Inspired, Every Day</h1>
-        <p class="text-xl font-light max-w-xl text-gray-600">Daily motivational quotes to uplift your mind and heart.</p>
-        <a href="#quotes" class="inline-block px-6 py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all text-base shadow-none">Start Reading</a>
+      <div class="container mx-auto relative z-10 flex flex-col items-center justify-center text-center py-10 sm:py-16 px-2 sm:px-4 space-y-4 sm:space-y-6">
+        <div class="text-base sm:text-lg font-semibold text-blue-600 mb-1">Welcome to DailyDose!</div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-800 leading-tight">Get Inspired, Every Day</h1>
+        <p class="text-base sm:text-xl font-light max-w-xs sm:max-w-xl text-gray-600">Daily motivational quotes to uplift your mind and heart.</p>
+        <a href="#quotes" class="inline-block px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-all text-base shadow-none">Start Reading</a>
       </div>
-    </section>
+    </section>                       
 
     <!-- Minimal Category Filter -->
-    <section id="categories" class="container mx-auto flex flex-wrap justify-center gap-2 py-6">
+    <section id="categories" class="container mx-auto flex flex-nowrap sm:flex-wrap justify-start sm:justify-center gap-2 py-4 px-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
       <button class="category-btn px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium hover:bg-blue-100 focus:bg-blue-200 transition-all" data-cat="All">All</button>
       <button class="category-btn px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium hover:bg-blue-100 focus:bg-blue-200 transition-all" data-cat="Life">Life</button>
       <button class="category-btn px-4 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-medium hover:bg-yellow-100 focus:bg-yellow-200 transition-all" data-cat="Growth">Growth</button>
@@ -66,9 +66,9 @@
     </section>
 
     <!-- Minimal Quotes Grid -->
-    <section id="quotes" class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-8 px-2">
+    <section id="quotes" class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 py-6 sm:py-8 px-1 sm:px-2">
       <!-- Life Quotes -->
-      <div class="quote-card rounded-xl p-6 space-y-4 bg-blue-50 border-l-4 border-blue-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+      <div class="quote-card rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 bg-blue-50 border-l-4 border-blue-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
         <div class="text-xl font-light text-gray-800">“The best way to get started is to quit talking and begin doing.”</div>
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">Life</span>
@@ -102,7 +102,7 @@
         </div>
       </div>
       <!-- Growth Quotes -->
-      <div class="quote-card rounded-xl p-6 space-y-4 bg-yellow-50 border-l-4 border-yellow-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+      <div class="quote-card rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 bg-yellow-50 border-l-4 border-yellow-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
         <div class="text-xl font-light text-gray-800">“Growth is never by mere chance; it is the result of forces working together.”</div>
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium">Growth</span>
@@ -136,7 +136,7 @@
         </div>
       </div>
       <!-- Peace Quotes -->
-      <div class="quote-card rounded-xl p-6 space-y-4 bg-purple-50 border-l-4 border-purple-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+      <div class="quote-card rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 bg-purple-50 border-l-4 border-purple-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
         <div class="text-xl font-light text-gray-800">“Peace begins with a smile.”</div>
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-medium">Peace</span>
@@ -170,7 +170,7 @@
         </div>
       </div>
       <!-- Productivity Quotes -->
-      <div class="quote-card rounded-xl p-6 space-y-4 bg-pink-50 border-l-4 border-pink-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+      <div class="quote-card rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 bg-pink-50 border-l-4 border-pink-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
         <div class="text-xl font-light text-gray-800">“Productivity is never an accident. It is always the result of a commitment to excellence, intelligent planning, and focused effort.”</div>
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 text-xs font-medium">Productivity</span>
@@ -204,7 +204,7 @@
         </div>
       </div>
       <!-- Motivation Quotes -->
-      <div class="quote-card rounded-xl p-6 space-y-4 bg-orange-50 border-l-4 border-orange-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+      <div class="quote-card rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4 bg-orange-50 border-l-4 border-orange-200 border border-gray-100 shadow-sm hover:shadow-md transition-all">
         <div class="text-xl font-light text-gray-800">“The future depends on what you do today.”</div>
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-xs font-medium">Motivation</span>
@@ -241,17 +241,17 @@
 
     <!-- About Section -->
     <section id="about" class="w-full py-14 mt-8 bg-white border-t border-b border-gray-100">
-      <div class="container mx-auto flex flex-col items-center justify-center text-center px-4">
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">About DailyDose</h2>
-        <p class="max-w-xl text-lg text-gray-600 font-light mb-4">DailyDose is your sanctuary for daily inspiration. We believe in the power of words to uplift, motivate, and bring peace to your day. Our curated collection of quotes spans life, growth, peace, productivity, and motivation—each chosen to help you find your spark and keep moving forward. Whether you need a gentle nudge or a burst of energy, DailyDose is here to inspire you, every day.</p>
+      <div class="container mx-auto flex flex-col items-center justify-center text-center px-2 sm:px-4">
+        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">About DailyDose</h2>
+        <p class="max-w-xs sm:max-w-xl text-base sm:text-lg text-gray-600 font-light mb-3 sm:mb-4">DailyDose is your sanctuary for daily inspiration. We believe in the power of words to uplift, motivate, and bring peace to your day. Our curated collection of quotes spans life, growth, peace, productivity, and motivation—each chosen to help you find your spark and keep moving forward. Whether you need a gentle nudge or a burst of energy, DailyDose is here to inspire you, every day.</p>
       </div>
     </section>
 
     <!-- FAQ Section -->
     <section id="faq" class="container mx-auto py-10 px-2">
-      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Frequently Asked Questions</h2>
-      <div class="max-w-2xl mx-auto space-y-4">
-        <div class="bg-white rounded-lg border border-gray-100 p-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">Frequently Asked Questions</h2>
+      <div class="max-w-xs sm:max-w-2xl mx-auto space-y-3 sm:space-y-4">
+        <div class="bg-white rounded-lg border border-gray-100 p-3 sm:p-4">
           <h3 class="text-base font-semibold text-blue-700 mb-1">1. What is DailyDose?</h3>
           <p class="text-gray-600 text-sm">DailyDose is your daily companion for inspiration and positivity. It's a place where you can find uplifting quotes to brighten your mood, motivate your day, and help you reflect on life's journey. Whether you need encouragement, a spark of motivation, or a moment of peace, DailyDose is here to offer a thoughtful quote to guide and inspire you—every single day.</p>
         </div>
@@ -280,7 +280,7 @@
 
     <!-- Footer -->
     <footer class="container mx-auto mt-auto py-6 px-4 flex flex-col sm:flex-row items-center justify-between text-gray-400 border-t border-gray-100 text-sm">
-      <div class="flex items-center space-x-2">
+      <div class="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2">
         <span>© 2024 DailyDose</span>
         <span>·</span>
         <span>by <a href="#about" class="hover:text-blue-700 underline font-medium">Prithvi Chhipa</a></span>
