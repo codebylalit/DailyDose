@@ -469,7 +469,7 @@
 
     <script>
       // Sample quotes data
-      const quotes = [
+      const defaultQuotes = [
         {
           id: 1,
           text: "The only way to do great work is to love what you do.",
@@ -525,6 +525,23 @@
           category: "success",
         },
       ];
+
+      // Load quotes from localStorage or use default quotes
+      function loadQuotes() {
+        const savedQuotes = localStorage.getItem("dailydose-quotes");
+        if (savedQuotes) {
+          return JSON.parse(savedQuotes);
+        }
+        return defaultQuotes;
+      }
+
+      // Save quotes to localStorage
+      function saveQuotes(quotesArray) {
+        localStorage.setItem("dailydose-quotes", JSON.stringify(quotesArray));
+      }
+
+      // Initialize quotes from localStorage
+      let quotes = loadQuotes();
 
       let currentQuotes = [...quotes];
       let currentFilter = "all";
@@ -701,6 +718,7 @@
 
         quotes.unshift(newQuote);
         currentQuotes = [...quotes];
+        saveQuotes(quotes); // Save to localStorage
         renderQuotes();
 
         addQuoteModal.classList.add("hidden");
@@ -743,6 +761,7 @@
           if (index > -1) {
             quotes.splice(index, 1);
             currentQuotes = [...quotes];
+            saveQuotes(quotes); // Save to localStorage
             renderQuotes();
             showToast("Quote deleted successfully!", "success");
           }
