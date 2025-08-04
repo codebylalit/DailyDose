@@ -252,6 +252,39 @@
           Discover motivational quotes that uplift your spirit and fuel your
           journey to success
         </p>
+
+        <!-- Quote of the Day -->
+        <div
+          class="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-8 mb-8 max-w-4xl mx-auto"
+        >
+          <div class="text-sm text-yellow-300 font-semibold mb-4">
+            ✨ QUOTE OF THE DAY
+          </div>
+          <div
+            class="text-2xl md:text-3xl font-light mb-6 leading-relaxed"
+            id="quoteOfTheDay"
+          >
+            Loading...
+          </div>
+          <div class="text-lg text-gray-200" id="quoteOfTheDayAuthor">
+            - Author
+          </div>
+          <div class="flex justify-center space-x-4 mt-6">
+            <button
+              id="refreshDailyQuote"
+              class="text-white hover:text-yellow-300 transition-colors"
+            >
+              <i class="fas fa-sync-alt mr-2"></i>New Daily Quote
+            </button>
+            <button
+              id="addToFavorites"
+              class="text-white hover:text-yellow-300 transition-colors"
+            >
+              <i class="fas fa-heart mr-2"></i>Add to Favorites
+            </button>
+          </div>
+        </div>
+
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             id="exploreBtn"
@@ -264,6 +297,18 @@
             class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors"
           >
             Random Quote
+          </button>
+          <button
+            id="loadMoreBtn"
+            class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors"
+          >
+            Load More Quotes
+          </button>
+          <button
+            id="favoritesBtn"
+            class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-purple-600 transition-colors"
+          >
+            <i class="fas fa-heart mr-2"></i>My Favorites
           </button>
         </div>
       </div>
@@ -456,6 +501,42 @@
       </div>
     </div>
 
+    <!-- Favorites Modal -->
+    <div
+      id="favoritesModal"
+      class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden z-50"
+    >
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div
+          class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full p-6 slide-in"
+        >
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-900">
+              <i class="fas fa-heart text-red-500 mr-2"></i>My Favorite Quotes
+            </h3>
+            <button
+              id="closeFavoritesModal"
+              class="text-gray-400 hover:text-gray-600"
+              title="Close favorites"
+            >
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          <div id="favoritesList" class="space-y-4 max-h-96 overflow-y-auto">
+            <!-- Favorites will be loaded here -->
+          </div>
+          <div class="flex justify-end mt-6">
+            <button
+              id="clearAllFavorites"
+              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
+            >
+              <i class="fas fa-trash mr-2"></i>Clear All Favorites
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Success Toast -->
     <div
       id="successToast"
@@ -468,7 +549,7 @@
     </div>
 
     <script>
-      // Sample quotes data
+      // Sample quotes data (fallback)
       const defaultQuotes = [
         {
           id: 1,
@@ -500,38 +581,113 @@
           author: "Franklin D. Roosevelt",
           category: "wisdom",
         },
-        {
-          id: 6,
-          text: "Don't watch the clock; do what it does. Keep going.",
-          author: "Sam Levenson",
-          category: "motivation",
-        },
-        {
-          id: 7,
-          text: "The best way to predict the future is to create it.",
-          author: "Peter Drucker",
-          category: "success",
-        },
-        {
-          id: 8,
-          text: "Peace begins with a smile.",
-          author: "Mother Teresa",
-          category: "wisdom",
-        },
-        {
-          id: 9,
-          text: "What you get by achieving your goals is not as important as what you become by achieving your goals.",
-          author: "Zig Ziglar",
-          category: "success",
-        },
       ];
 
-      // Load quotes from localStorage or use default quotes
-      function loadQuotes() {
+      // Fetch quotes from API
+      async function fetchQuotesFromAPI() {
+        try {
+          // Try multiple API calls to get different quotes
+          const promises = [];
+          for (let i = 0; i < 5; i++) {
+            promises.push(
+              fetch(
+                "https://api.quotable.io/random?tags=inspirational|motivational|success|wisdom|life"
+              )
+                .then((response) => response.json())
+                .catch(() => null)
+            );
+          }
+
+          const results = await Promise.all(promises);
+          const validQuotes = results.filter((quote) => quote && quote.content);
+
+          if (validQuotes.length > 0) {
+            return validQuotes.map((quote, index) => ({
+              id: Date.now() + index,
+              text: quote.content,
+              author: quote.author || "Unknown",
+              category: getCategoryFromTags(quote.tags || []),
+            }));
+          }
+        } catch (error) {
+          console.log("API fetch failed:", error);
+        }
+
+        // Fallback: return some additional default quotes
+        return [
+          {
+            id: Date.now() + 1,
+            text: "The journey of a thousand miles begins with one step.",
+            author: "Lao Tzu",
+            category: "motivation",
+          },
+          {
+            id: Date.now() + 2,
+            text: "Believe you can and you're halfway there.",
+            author: "Theodore Roosevelt",
+            category: "motivation",
+          },
+          {
+            id: Date.now() + 3,
+            text: "It does not matter how slowly you go as long as you do not stop.",
+            author: "Confucius",
+            category: "success",
+          },
+          {
+            id: Date.now() + 4,
+            text: "The only impossible journey is the one you never begin.",
+            author: "Tony Robbins",
+            category: "motivation",
+          },
+          {
+            id: Date.now() + 5,
+            text: "Success is walking from failure to failure with no loss of enthusiasm.",
+            author: "Winston Churchill",
+            category: "success",
+          },
+        ];
+      }
+
+      // Map API tags to our categories
+      function getCategoryFromTags(tags) {
+        if (!tags || tags.length === 0) return "wisdom";
+
+        const tagString = tags.join(" ").toLowerCase();
+
+        if (
+          tagString.includes("motivational") ||
+          tagString.includes("motivation")
+        ) {
+          return "motivation";
+        } else if (
+          tagString.includes("success") ||
+          tagString.includes("achievement")
+        ) {
+          return "success";
+        } else if (
+          tagString.includes("life") ||
+          tagString.includes("philosophy")
+        ) {
+          return "life";
+        } else {
+          return "wisdom";
+        }
+      }
+
+      // Load quotes from localStorage, API, or use default quotes
+      async function loadQuotes() {
         const savedQuotes = localStorage.getItem("dailydose-quotes");
         if (savedQuotes) {
           return JSON.parse(savedQuotes);
         }
+
+        // Try to fetch from API first
+        const apiQuotes = await fetchQuotesFromAPI();
+        if (apiQuotes && apiQuotes.length > 0) {
+          return apiQuotes;
+        }
+
+        // Fallback to default quotes
         return defaultQuotes;
       }
 
@@ -540,8 +696,157 @@
         localStorage.setItem("dailydose-quotes", JSON.stringify(quotesArray));
       }
 
-      // Initialize quotes from localStorage
-      let quotes = loadQuotes();
+      // Favorites functionality
+      function getFavorites() {
+        const favorites = localStorage.getItem("dailydose-favorites");
+        return favorites ? JSON.parse(favorites) : [];
+      }
+
+      function saveFavorites(favoritesArray) {
+        localStorage.setItem(
+          "dailydose-favorites",
+          JSON.stringify(favoritesArray)
+        );
+      }
+
+      function isQuoteFavorite(quoteId) {
+        const favorites = getFavorites();
+        return favorites.includes(quoteId);
+      }
+
+      function toggleFavorite(quoteId) {
+        const favorites = getFavorites();
+        const index = favorites.indexOf(quoteId);
+
+        if (index > -1) {
+          favorites.splice(index, 1);
+          showToast("Removed from favorites", "success");
+        } else {
+          favorites.push(quoteId);
+          showToast("Added to favorites", "success");
+        }
+
+        saveFavorites(favorites);
+        renderQuotes(); // Re-render to update heart icons
+      }
+
+      function renderFavorites() {
+        console.log("Rendering favorites...");
+        const favorites = getFavorites();
+        console.log("Favorites:", favorites);
+        const favoritesList = document.getElementById("favoritesList");
+
+        if (!favoritesList) {
+          console.error("Favorites list element not found!");
+          return;
+        }
+
+        if (favorites.length === 0) {
+          favoritesList.innerHTML = `
+             <div class="text-center text-gray-500 py-8">
+               <i class="fas fa-heart text-4xl mb-4 text-gray-300"></i>
+               <p>No favorite quotes yet.</p>
+               <p class="text-sm">Start adding quotes to your favorites!</p>
+             </div>
+           `;
+          return;
+        }
+
+        favoritesList.innerHTML = favorites
+          .map((quoteId) => {
+            const quote = quotes.find((q) => q.id === quoteId);
+            if (!quote) return "";
+
+            return `
+             <div class="bg-gray-50 rounded-lg p-4 border-l-4 border-red-500">
+               <div class="flex justify-between items-start">
+                 <div class="flex-1">
+                   <p class="text-gray-800 mb-2">"${quote.text}"</p>
+                   <div class="flex items-center justify-between">
+                     <span class="text-sm font-medium text-purple-600">— ${quote.author}</span>
+                     <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium capitalize">
+                       ${quote.category}
+                     </span>
+                   </div>
+                 </div>
+                 <button onclick="toggleFavorite(${quote.id})" class="text-red-500 hover:text-red-700 ml-4">
+                   <i class="fas fa-heart"></i>
+                 </button>
+               </div>
+             </div>
+           `;
+          })
+          .join("");
+      }
+
+      // Initialize quotes
+      let quotes = [];
+
+      // Quote of the Day functionality
+      let currentDailyQuote = null;
+
+      async function loadQuoteOfTheDay() {
+        const today = new Date().toDateString();
+        const savedDailyQuote = localStorage.getItem("dailydose-daily-quote");
+
+        if (savedDailyQuote) {
+          const parsed = JSON.parse(savedDailyQuote);
+          if (parsed.date === today) {
+            currentDailyQuote = parsed.quote;
+            displayQuoteOfTheDay();
+            return;
+          }
+        }
+
+        // Fetch new daily quote
+        try {
+          const response = await fetch(
+            "https://api.quotable.io/random?tags=inspirational|motivational"
+          );
+          const data = await response.json();
+
+          if (data && data.content) {
+            currentDailyQuote = {
+              id: Date.now(),
+              text: data.content,
+              author: data.author || "Unknown",
+              category: getCategoryFromTags(data.tags || []),
+            };
+          } else {
+            throw new Error("Invalid API response");
+          }
+
+          localStorage.setItem(
+            "dailydose-daily-quote",
+            JSON.stringify({
+              date: today,
+              quote: currentDailyQuote,
+            })
+          );
+
+          displayQuoteOfTheDay();
+        } catch (error) {
+          // Fallback to random quote from our collection
+          const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+          currentDailyQuote = randomQuote;
+          displayQuoteOfTheDay();
+        }
+      }
+
+      function displayQuoteOfTheDay() {
+        if (!currentDailyQuote) return;
+
+        quoteOfTheDay.textContent = currentDailyQuote.text;
+        quoteOfTheDayAuthor.textContent = `— ${currentDailyQuote.author}`;
+      }
+
+      // Initialize quotes asynchronously
+      async function initializeQuotes() {
+        quotes = await loadQuotes();
+        currentQuotes = [...quotes];
+        renderQuotes();
+        await loadQuoteOfTheDay();
+      }
 
       let currentQuotes = [...quotes];
       let currentFilter = "all";
@@ -560,10 +865,23 @@
       const successToast = document.getElementById("successToast");
       const exploreBtn = document.getElementById("exploreBtn");
       const randomQuoteBtn = document.getElementById("randomQuoteBtn");
+      const loadMoreBtn = document.getElementById("loadMoreBtn");
+      const favoritesBtn = document.getElementById("favoritesBtn");
+      const favoritesModal = document.getElementById("favoritesModal");
+      const closeFavoritesModal = document.getElementById(
+        "closeFavoritesModal"
+      );
+      const clearAllFavorites = document.getElementById("clearAllFavorites");
+      const quoteOfTheDay = document.getElementById("quoteOfTheDay");
+      const quoteOfTheDayAuthor = document.getElementById(
+        "quoteOfTheDayAuthor"
+      );
+      const refreshDailyQuote = document.getElementById("refreshDailyQuote");
+      const addToFavorites = document.getElementById("addToFavorites");
 
       // Initialize the app
-      function init() {
-        renderQuotes();
+      async function init() {
+        await initializeQuotes();
         setupEventListeners();
       }
 
@@ -581,29 +899,47 @@
         const card = document.createElement("div");
         card.className =
           "quote-card card-hover rounded-xl p-6 shadow-lg fade-in";
+        const isFavorite = isQuoteFavorite(quote.id);
         card.innerHTML = `
-                <div class="text-2xl text-purple-600 mb-4">
-                    <i class="fas fa-quote-left"></i>
-                </div>
-                <p class="text-gray-800 text-lg mb-4 leading-relaxed">${quote.text}</p>
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-purple-600">— ${quote.author}</span>
-                    <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium capitalize">
-                        ${quote.category}
-                    </span>
-                </div>
-                <div class="flex justify-end space-x-2 mt-4">
-                    <button class="text-gray-400 hover:text-purple-600 transition-colors" onclick="copyQuote('${quote.text} - ${quote.author}')">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                    <button class="text-gray-400 hover:text-purple-600 transition-colors" onclick="shareQuote('${quote.text} - ${quote.author}')">
-                        <i class="fas fa-share"></i>
-                    </button>
-                    <button class="text-gray-400 hover:text-red-600 transition-colors" onclick="deleteQuote(${quote.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
+           <div class="text-2xl text-purple-600 mb-4">
+             <i class="fas fa-quote-left"></i>
+           </div>
+           <p class="text-gray-800 text-lg mb-4 leading-relaxed">${
+             quote.text
+           }</p>
+           <div class="flex items-center justify-between">
+             <span class="text-sm font-medium text-purple-600">— ${
+               quote.author
+             }</span>
+             <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium capitalize">
+               ${quote.category}
+             </span>
+           </div>
+           <div class="flex justify-end space-x-2 mt-4">
+             <button class="text-gray-400 hover:text-purple-600 transition-colors" onclick="copyQuote('${
+               quote.text
+             } - ${quote.author}')" title="Copy quote">
+               <i class="fas fa-copy"></i>
+             </button>
+             <button class="text-gray-400 hover:text-purple-600 transition-colors" onclick="shareQuote('${
+               quote.text
+             } - ${quote.author}')" title="Share quote">
+               <i class="fas fa-share"></i>
+             </button>
+             <button class="text-gray-400 hover:text-red-500 transition-colors" onclick="toggleFavorite(${
+               quote.id
+             })" title="${
+          isFavorite ? "Remove from favorites" : "Add to favorites"
+        }">
+               <i class="fas fa-heart ${isFavorite ? "text-red-500" : ""}"></i>
+             </button>
+             <button class="text-gray-400 hover:text-red-600 transition-colors" onclick="deleteQuote(${
+               quote.id
+             })" title="Delete quote">
+               <i class="fas fa-trash"></i>
+             </button>
+           </div>
+         `;
 
         card.addEventListener("click", (e) => {
           if (!e.target.closest("button")) {
@@ -675,11 +1011,82 @@
           showQuoteDetail(randomQuote);
         });
 
+        loadMoreBtn.addEventListener("click", async () => {
+          loadMoreBtn.disabled = true;
+          loadMoreBtn.innerHTML =
+            '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+
+          const newQuotes = await fetchQuotesFromAPI();
+          if (newQuotes && newQuotes.length > 0) {
+            quotes.push(...newQuotes);
+            currentQuotes = [...quotes];
+            saveQuotes(quotes);
+            renderQuotes();
+            showToast(`Added ${newQuotes.length} new quotes!`, "success");
+          } else {
+            showToast("Failed to load more quotes. Please try again.", "error");
+          }
+
+          loadMoreBtn.disabled = false;
+          loadMoreBtn.innerHTML = "Load More Quotes";
+        });
+
+        // Favorites functionality
+        favoritesBtn.addEventListener("click", () => {
+          console.log("Favorites button clicked");
+          console.log("Favorites modal element:", favoritesModal);
+          renderFavorites();
+          if (favoritesModal) {
+            favoritesModal.classList.remove("hidden");
+            favoritesModal.style.display = "block";
+            console.log("Favorites modal should be visible");
+          } else {
+            console.error("Favorites modal not found!");
+          }
+        });
+
+        closeFavoritesModal.addEventListener("click", () => {
+          favoritesModal.classList.add("hidden");
+          favoritesModal.style.display = "none";
+        });
+
+        clearAllFavorites.addEventListener("click", () => {
+          if (confirm("Are you sure you want to clear all favorites?")) {
+            saveFavorites([]);
+            renderFavorites();
+            renderQuotes();
+            showToast("All favorites cleared", "success");
+          }
+        });
+
+        // Quote of the Day functionality
+        refreshDailyQuote.addEventListener("click", async () => {
+          refreshDailyQuote.disabled = true;
+          refreshDailyQuote.innerHTML =
+            '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+
+          localStorage.removeItem("dailydose-daily-quote");
+          await loadQuoteOfTheDay();
+
+          refreshDailyQuote.disabled = false;
+          refreshDailyQuote.innerHTML =
+            '<i class="fas fa-sync-alt mr-2"></i>New Daily Quote';
+        });
+
+        addToFavorites.addEventListener("click", () => {
+          if (currentDailyQuote) {
+            toggleFavorite(currentDailyQuote.id);
+          }
+        });
+
         // Close modals on backdrop click
-        [addQuoteModal, quoteDetailModal].forEach((modal) => {
+        [addQuoteModal, quoteDetailModal, favoritesModal].forEach((modal) => {
           modal.addEventListener("click", (e) => {
             if (e.target === modal) {
               modal.classList.add("hidden");
+              if (modal === favoritesModal) {
+                modal.style.display = "none";
+              }
             }
           });
         });
