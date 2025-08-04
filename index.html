@@ -878,6 +878,8 @@
       );
       const refreshDailyQuote = document.getElementById("refreshDailyQuote");
       const addToFavorites = document.getElementById("addToFavorites");
+      const copyQuoteBtn = document.getElementById("copyQuote");
+      const shareQuoteBtn = document.getElementById("shareQuote");
 
       // Initialize the app
       async function init() {
@@ -1008,6 +1010,23 @@
 
         closeDetailModal.addEventListener("click", () => {
           quoteDetailModal.classList.add("hidden");
+        });
+
+        // Quote detail modal buttons
+        copyQuoteBtn.addEventListener("click", () => {
+          const quoteText =
+            document.getElementById("modalQuoteText").textContent;
+          const quoteAuthor =
+            document.getElementById("modalQuoteAuthor").textContent;
+          copyQuote(`${quoteText} ${quoteAuthor}`);
+        });
+
+        shareQuoteBtn.addEventListener("click", () => {
+          const quoteText =
+            document.getElementById("modalQuoteText").textContent;
+          const quoteAuthor =
+            document.getElementById("modalQuoteAuthor").textContent;
+          shareQuote(`${quoteText} ${quoteAuthor}`);
         });
 
         // Add quote form
