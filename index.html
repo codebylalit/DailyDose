@@ -916,30 +916,48 @@
              </span>
            </div>
            <div class="flex justify-end space-x-2 mt-4">
-             <button class="text-gray-400 hover:text-purple-600 transition-colors" onclick="copyQuote('${
-               quote.text
-             } - ${quote.author}')" title="Copy quote">
+             <button class="copy-btn text-gray-400 hover:text-purple-600 transition-colors" title="Copy quote">
                <i class="fas fa-copy"></i>
              </button>
-             <button class="text-gray-400 hover:text-purple-600 transition-colors" onclick="shareQuote('${
-               quote.text
-             } - ${quote.author}')" title="Share quote">
+             <button class="share-btn text-gray-400 hover:text-purple-600 transition-colors" title="Share quote">
                <i class="fas fa-share"></i>
              </button>
-             <button class="text-gray-400 hover:text-red-500 transition-colors" onclick="toggleFavorite(${
-               quote.id
-             })" title="${
-          isFavorite ? "Remove from favorites" : "Add to favorites"
-        }">
+             <button class="favorite-btn text-gray-400 hover:text-red-500 transition-colors" title="${
+               isFavorite ? "Remove from favorites" : "Add to favorites"
+             }">
                <i class="fas fa-heart ${isFavorite ? "text-red-500" : ""}"></i>
              </button>
-             <button class="text-gray-400 hover:text-red-600 transition-colors" onclick="deleteQuote(${
-               quote.id
-             })" title="Delete quote">
+             <button class="delete-btn text-gray-400 hover:text-red-600 transition-colors" title="Delete quote">
                <i class="fas fa-trash"></i>
              </button>
            </div>
          `;
+
+        // Add event listeners to the buttons
+        const copyBtn = card.querySelector(".copy-btn");
+        const shareBtn = card.querySelector(".share-btn");
+        const favoriteBtn = card.querySelector(".favorite-btn");
+        const deleteBtn = card.querySelector(".delete-btn");
+
+        copyBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          copyQuote(`${quote.text} - ${quote.author}`);
+        });
+
+        shareBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          shareQuote(`${quote.text} - ${quote.author}`);
+        });
+
+        favoriteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleFavorite(quote.id);
+        });
+
+        deleteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          deleteQuote(quote.id);
+        });
 
         card.addEventListener("click", (e) => {
           if (!e.target.closest("button")) {
